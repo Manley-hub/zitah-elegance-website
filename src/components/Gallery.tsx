@@ -1,145 +1,118 @@
-import { useEffect, useState } from 'react';
-import { Play } from 'lucide-react';
-import { createClient } from '@supabase/supabase-js';
+import { Eye } from 'lucide-react';
 
-interface Sermon {
-  id: string;
-  title: string;
-  description: string;
-  speaker: string;
-  date: string;
-  video_url: string;
-}
-
-export default function Sermons() {
-  const [sermons, setSermons] = useState<Sermon[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchSermons = async () => {
-      try {
-        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-        const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-        if (!supabaseUrl || !supabaseKey) {
-          console.error('Missing Supabase credentials');
-          setLoading(false);
-          return;
-        }
-
-        const supabase = createClient(supabaseUrl, supabaseKey);
-        const { data, error } = await supabase
-          .from('sermons')
-          .select('*')
-          .order('date', { ascending: false })
-          .limit(6);
-
-        if (error) throw error;
-        setSermons(data || []);
-      } catch (error) {
-        console.error('Error fetching sermons:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSermons();
-  }, []);
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
+export default function Gallery() {
+  const galleryImages = [
+    {
+      url: 'https://images.pexels.com/photos/1926769/pexels-photo-1926769.jpeg?auto=compress&cs=tinysrgb&w=600',
+      title: 'Evening Gown',
+      category: 'Special Occasion',
+    },
+    {
+      url: 'https://images.pexels.com/photos/1055691/pexels-photo-1055691.jpeg?auto=compress&cs=tinysrgb&w=600',
+      title: 'Designer Dress',
+      category: 'Premium Collection',
+    },
+    {
+      url: 'https://images.pexels.com/photos/1374510/pexels-photo-1374510.jpeg?auto=compress&cs=tinysrgb&w=600',
+      title: 'Casual Elegance',
+      category: 'Everyday Wear',
+    },
+    {
+      url: 'https://images.pexels.com/photos/1381556/pexels-photo-1381556.jpeg?auto=compress&cs=tinysrgb&w=600',
+      title: 'Bridal Collection',
+      category: 'Special Occasion',
+    },
+    {
+      url: 'https://images.pexels.com/photos/1884581/pexels-photo-1884581.jpeg?auto=compress&cs=tinysrgb&w=600',
+      title: 'Custom Design',
+      category: 'Bespoke',
+    },
+    {
+      url: 'https://images.pexels.com/photos/1927259/pexels-photo-1927259.jpeg?auto=compress&cs=tinysrgb&w=600',
+      title: 'Fashion Forward',
+      category: 'Designer',
+    },
+    {
+      url: 'https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg?auto=compress&cs=tinysrgb&w=600',
+      title: 'Summer Collection',
+      category: 'Seasonal',
+    },
+    {
+      url: 'https://images.pexels.com/photos/1449667/pexels-photo-1449667.jpeg?auto=compress&cs=tinysrgb&w=600',
+      title: 'Professional Attire',
+      category: 'Work Wear',
+    },
+    {
+      url: 'https://images.pexels.com/photos/1462637/pexels-photo-1462637.jpeg?auto=compress&cs=tinysrgb&w=600',
+      title: 'Party Dress',
+      category: 'Evening Wear',
+    },
+  ];
 
   return (
-    <section id="sermons" className="py-20 bg-white">
+    <section id="gallery" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Recent <span className="text-blue-600">Sermons & Messages</span>
+          <h2 className="font-heading text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            Our <span className="text-purple-700">Gallery</span>
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-blue-600 to-purple-600 mx-auto mb-6"></div>
+          <div className="w-24 h-1 bg-gradient-to-r from-purple-700 to-gold-500 mx-auto mb-6"></div>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Be encouraged and transformed by powerful messages of faith and spiritual growth
+            Explore our stunning collection of elegant designs and fashion pieces
           </p>
         </div>
 
-        {loading ? (
-          <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-          </div>
-        ) : sermons.length > 0 ? (
-          <>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-              {sermons.map((sermon) => (
-                <div
-                  key={sermon.id}
-                  className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-2 cursor-pointer text-left bg-gray-50"
-                >
-                  <div className="aspect-video relative bg-gray-900">
-                    {sermon.video_url && (
-                      <iframe
-                        width="100%"
-                        height="100%"
-                        src={sermon.video_url}
-                        title={sermon.title}
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                        className="w-full h-full"
-                      ></iframe>
-                    )}
-                    <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Play className="w-12 h-12 text-white" />
-                    </div>
-                  </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {galleryImages.map((image, index) => (
+            <button
+              key={index}
+              onClick={() => {
+                const element = document.getElementById('contact');
+                if (element) element.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 cursor-pointer aspect-[3/4] text-left"
+            >
+              <img
+                src={image.url}
+                alt={image.title}
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-purple-900 via-purple-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-                  <div className="p-6">
-                    <div className="text-sm text-blue-600 font-semibold mb-2">
-                      {formatDate(sermon.date)}
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2">
-                      {sermon.title}
-                    </h3>
-                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">
-                      {sermon.description}
-                    </p>
-                    <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                      <span className="text-sm font-medium text-gray-700">
-                        By {sermon.speaker}
-                      </span>
-                      <span className="text-blue-600 text-sm font-medium group-hover:translate-x-1 transition-transform">
-                        Watch →
-                      </span>
-                    </div>
-                  </div>
+              <div className="absolute inset-0 flex flex-col justify-end p-6 text-white opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
+                <span className="text-gold-300 text-sm font-medium mb-2">
+                  {image.category}
+                </span>
+                <h3 className="font-heading text-xl font-bold mb-3">
+                  {image.title}
+                </h3>
+                <div className="flex items-center space-x-2 text-sm hover:opacity-80 transition-opacity">
+                  <Eye className="w-4 h-4" />
+                  <span>View Details</span>
                 </div>
-              ))}
-            </div>
+              </div>
 
-            <div className="text-center">
-              <p className="text-gray-600 mb-6">
-                Watch full messages and get inspired by our recent services
-              </p>
-              <a
-                href="https://www.youtube.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-lg inline-flex items-center space-x-2"
-              >
-                <span>Visit Our YouTube Channel</span>
-                <Play className="w-4 h-4" />
-              </a>
-            </div>
-          </>
-        ) : (
-          <div className="text-center py-12">
-            <p className="text-gray-600">Sermons will be available soon</p>
-          </div>
-        )}
+              <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                <span className="text-purple-700 text-xs font-medium">Available</span>
+              </div>
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-16 text-center">
+          <p className="text-gray-600 mb-6">
+            These are just a few samples from our extensive collection
+          </p>
+          <button
+            onClick={() => {
+              const element = document.getElementById('contact');
+              if (element) element.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="bg-purple-700 text-white px-8 py-3 rounded-full font-medium hover:bg-purple-800 transition-colors shadow-lg"
+          >
+            View Full Collection In Store
+          </button>
+        </div>
       </div>
     </section>
   );

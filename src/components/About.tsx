@@ -1,153 +1,97 @@
-import { useEffect, useState } from 'react';
-import { Heart, Target, Lightbulb } from 'lucide-react';
-import { createClient } from '@supabase/supabase-js';
-
-interface AboutContent {
-  section: string;
-  title: string;
-  content: string;
-}
+import { Heart, Award, Palette, Users } from 'lucide-react';
 
 export default function About() {
-  const [aboutData, setAboutData] = useState<AboutContent[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchAbout = async () => {
-      try {
-        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-        const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-        if (!supabaseUrl || !supabaseKey) {
-          console.error('Missing Supabase credentials');
-          setLoading(false);
-          return;
-        }
-
-        const supabase = createClient(supabaseUrl, supabaseKey);
-        const { data, error } = await supabase
-          .from('about_content')
-          .select('*')
-          .order('section');
-
-        if (error) throw error;
-        setAboutData(data || []);
-      } catch (error) {
-        console.error('Error fetching about content:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAbout();
-  }, []);
-
-  const getIcon = (section: string) => {
-    switch (section) {
-      case 'mission':
-        return <Heart className="w-8 h-8" />;
-      case 'vision':
-        return <Lightbulb className="w-8 h-8" />;
-      default:
-        return <Target className="w-8 h-8" />;
-    }
-  };
+  const features = [
+    {
+      icon: Heart,
+      title: 'Passion for Fashion',
+      description: 'Every piece is crafted with love and attention to detail, ensuring you look and feel your best.',
+    },
+    {
+      icon: Award,
+      title: 'Premium Quality',
+      description: 'We source only the finest fabrics and materials to create lasting, elegant garments.',
+    },
+    {
+      icon: Palette,
+      title: 'Creative Design',
+      description: 'Our designs blend modern trends with timeless elegance for truly unique fashion.',
+    },
+    {
+      icon: Users,
+      title: 'Customer Focus',
+      description: 'Your satisfaction is our priority. We offer personalized service and custom designs.',
+    },
+  ];
 
   return (
     <section id="about" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            About <span className="text-blue-600">First Love Assembly</span>
+          <h2 className="font-heading text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            About <span className="text-purple-700">Zitah Elegance</span>
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-blue-600 to-purple-600 mx-auto mb-6"></div>
+          <div className="w-24 h-1 bg-gradient-to-r from-purple-700 to-gold-500 mx-auto mb-6"></div>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Discover our heart, purpose, and the journey that guides everything we do
+            Welcome to Zitah Elegance, where style meets sophistication in the heart of Owerri
           </p>
         </div>
 
-        {loading ? (
-          <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
+          <div className="relative">
+            <div className="aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl">
+              <img
+                src="https://images.pexels.com/photos/1926769/pexels-photo-1926769.jpeg?auto=compress&cs=tinysrgb&w=800"
+                alt="Fashion boutique"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="absolute -bottom-6 -right-6 bg-purple-700 text-white p-6 rounded-2xl shadow-xl">
+              <div className="text-4xl font-heading font-bold">Since 2020</div>
+              <div className="text-purple-100">Serving Owerri</div>
+            </div>
           </div>
-        ) : (
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
-            {aboutData.map((item) => (
-              <div
-                key={item.section}
-                className="bg-gradient-to-br from-blue-50 to-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-2 border border-blue-100"
-              >
-                <div className="text-blue-600 mb-4">{getIcon(item.section)}</div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">{item.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{item.content}</p>
+
+          <div className="space-y-6">
+            <h3 className="font-heading text-3xl font-bold text-gray-900">
+              Our Story
+            </h3>
+            <p className="text-gray-600 leading-relaxed">
+              Zitah Elegance was born from a passion for creating beautiful, high-quality fashion
+              that empowers individuals to express their unique style. Located in the vibrant city
+              of Owerri, we've become a trusted destination for those seeking elegance and sophistication.
+            </p>
+            <p className="text-gray-600 leading-relaxed">
+              Our mission is simple: to deliver stylish, elegant, and high-quality fashion that celebrates
+              creativity and modern African aesthetics. From everyday wear to special occasions, we curate
+              and create pieces that make you feel confident and beautiful.
+            </p>
+            <div className="bg-purple-50 border-l-4 border-purple-700 p-6 rounded-r-lg">
+              <p className="text-purple-900 font-medium italic">
+                "We believe that fashion is more than clothing—it's a form of self-expression,
+                a celebration of individuality, and an art form that deserves to be crafted with excellence."
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {features.map((feature, index) => (
+            <div
+              key={index}
+              className="bg-gradient-to-br from-purple-50 to-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-2"
+            >
+              <div className="bg-purple-700 w-14 h-14 rounded-full flex items-center justify-center mb-4">
+                <feature.icon className="w-7 h-7 text-white" />
               </div>
-            ))}
-          </div>
-        )}
-
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white">
-          <div className="grid md:grid-cols-2 gap-8">
-            <div>
-              <h3 className="text-3xl font-bold mb-4">Our Core Values</h3>
-              <ul className="space-y-3">
-                <li className="flex items-start space-x-3">
-                  <span className="text-blue-200 mt-1">✓</span>
-                  <span>Faith in Jesus Christ as Lord and Savior</span>
-                </li>
-                <li className="flex items-start space-x-3">
-                  <span className="text-blue-200 mt-1">✓</span>
-                  <span>The transforming power of the Holy Spirit</span>
-                </li>
-                <li className="flex items-start space-x-3">
-                  <span className="text-blue-200 mt-1">✓</span>
-                  <span>Community and authentic fellowship</span>
-                </li>
-                <li className="flex items-start space-x-3">
-                  <span className="text-blue-200 mt-1">✓</span>
-                  <span>Servant leadership and compassion</span>
-                </li>
-                <li className="flex items-start space-x-3">
-                  <span className="text-blue-200 mt-1">✓</span>
-                  <span>Spiritual growth and personal transformation</span>
-                </li>
-              </ul>
+              <h4 className="font-heading text-xl font-bold text-gray-900 mb-2">
+                {feature.title}
+              </h4>
+              <p className="text-gray-600 leading-relaxed">
+                {feature.description}
+              </p>
             </div>
-            <div>
-              <h3 className="text-3xl font-bold mb-4">Why Join Us</h3>
-              <ul className="space-y-3">
-                <li className="flex items-start space-x-3">
-                  <span className="text-blue-200 mt-1">•</span>
-                  <span>Powerful, Spirit-filled worship services</span>
-                </li>
-                <li className="flex items-start space-x-3">
-                  <span className="text-blue-200 mt-1">•</span>
-                  <span>Sound biblical teaching and mentorship</span>
-                </li>
-                <li className="flex items-start space-x-3">
-                  <span className="text-blue-200 mt-1">•</span>
-                  <span>Welcoming, inclusive community</span>
-                </li>
-                <li className="flex items-start space-x-3">
-                  <span className="text-blue-200 mt-1">•</span>
-                  <span>Opportunities to serve and grow spiritually</span>
-                </li>
-                <li className="flex items-start space-x-3">
-                  <span className="text-blue-200 mt-1">•</span>
-                  <span>Real relationships and accountability</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-16 bg-blue-50 rounded-2xl p-8 md:p-12 border border-blue-200">
-          <h3 className="text-2xl font-bold text-gray-900 mb-4">Our Story</h3>
-          <p className="text-gray-700 leading-relaxed mb-4">
-            First Love Assembly was founded with a burning passion to create a sanctuary where believers can authentically encounter God's presence. Our journey began with a simple vision: to build a community of faith that is not just a Sunday gathering, but a spiritual family committed to daily transformation.
-          </p>
-          <p className="text-gray-700 leading-relaxed">
-            Over the years, we've witnessed countless lives changed, families healed, and communities impacted by the power of God's Word and the Holy Spirit. Today, we continue that legacy, standing as a beacon of hope, faith, and love in Owerri and beyond. Whether you're taking your first steps in faith or you're a seasoned believer, there's a place for you here at First Love Assembly.
-          </p>
+          ))}
         </div>
       </div>
     </section>
