@@ -83,7 +83,7 @@ export default function Contact() {
                   <h4 className="font-heading text-lg font-bold text-gray-900 mb-1">
                     Email
                   </h4>
-                  <p className="text-gold-700 font-semibold">contact@zitahelegance.com</p>
+                  <p className="text-gold-700 font-semibold">preciousodiwomma09@gmail.com</p>
                   <p className="text-gray-600 text-sm mt-1">We'll respond within 24 hours</p>
                 </div>
               </div>
